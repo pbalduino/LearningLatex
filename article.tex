@@ -23,6 +23,8 @@
 
 \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
+\setlength{\parskip}{1.5ex}
+
 %%% PACKAGES
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
@@ -51,12 +53,22 @@
 \renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
 \renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
 
+\usepackage{hyperref}
+\usepackage{listings}
+
 %%% END Article customizations
 
 %%% The "real" document content comes below...
 
 \renewcommand{\chaptername}{}
+\renewcommand{\thechapter}{}
+\renewcommand{\thesection}{}
+\renewcommand{\thesubsection}{}
+\renewcommand{\thesubsubsection}{}
+\renewcommand{\theparagraph}{}
+\renewcommand{\thesubparagraph}{}
 \setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{5}
 \setlength{\parindent}{0cm}
 
 \title{Criando aplicações web com Ruby on Rails}
@@ -67,6 +79,7 @@
          % otherwise the current date is printed 
 
 \begin{document}
+\lstset{language=Ruby}
 
 \maketitle
 
@@ -77,16 +90,14 @@
 \chapter{Introdução}
 
 \section{A quem se destina esse curso}
-
 Este curso foi criado para pessoas que já tenham alguma experiência, mínima que seja, em desenvolvimento de software e que tenham alguma mínima experiência com desenvolvimento para web.
-
 \section{Termos técnicos e nomenclaturas}
 
 Alguns termos técnicos serão apresentados em inglês, ao invés de forçar alguma tradução que fuja do jargão normalmente encontrado nos livros e sites. Se por um lado eu posso utilizar design patterns ao invés de padrões de projeto, que é uma tradução incompleta e não de toda correta, por outro eu posso utilizar padrão arquitetural ao invés de architetural pattern, por considerar que a tradução corresponde ao significado original.
 
 Sinta-se a vontade para discordar e apresentar sugestões de melhora, uma vez que a escolha dos termos tem caráter pessoal e subjetivo, apesar de sempre visar o máximo de clareza e didatismo possível, baseando-me em minha experiência profissional e nos termos utilizados na literatura especializada.
 
-\subsubsection{Terminal e Prompt de Comando}
+\subsection{Terminal e Prompt de Comando}
 
 Sempre que eu disser \emph{terminal}, entenda que estou me referindo ao \textbf{Prompt de Comandos} do \emph{Windows} e ao \textbf{Terminal} do \emph{Linux} e do \emph{MacOS X}, dependendo do sistema operacional que você estiver utilizando. 
 
@@ -140,34 +151,58 @@ A explosão de popularidade veio mesmo com o lançamento do Ruby on Rails, que �
 
 A implementação de referência do Ruby chama-se MRI (Matz’s Ruby Interpreter, ou Interpretador Ruby do Matz), e foi a implementação oficial até o lançamento da versão 1.9, quando foi substituida pelo YARV (Yet another Ruby VM)
 
-Outras implementações do Ruby
+\subsection{Outras implementações do Ruby}
 
-JRuby é uma implementação Ruby que usa a JVM (Máquina Virtual Java) para ser executada
-IronRuby é uma implementação Ruby que é executada no ambiente .Net (CLI)
+\begin{itemize}
+\item JRuby é uma implementação Ruby que usa a JVM (Máquina Virtual Java) para ser executada
+
+\item IronRuby é uma implementação Ruby que é executada no ambiente .Net (CLI)
 Rubinius se propõe a ser uma implementação Ruby que utilize o máximo possível de código escrito em Ruby
-MacRuby é uma implementação que gera código nativo para o sistema operacional MacOSX e, mais recentemente, também para iOS (iPhone e iPad) com o nome de RubyMotion, ambos da Apple.
-HotRuby e JsRuby são implementações Ruby que rodam sobre interpretadores ou máquinas virtuais JavaScript, como por exemplo V8, da Google, ou Rhino, que foi desenvolvido para executar sobre a JVM.
-mruby é uma implementação mínima da linguagem, feita pelo próprio Matz, que tem por objetivo executar scripts Ruby em dispositivos móveis
-Instalando
+
+\item MacRuby é uma implementação que gera código nativo para o sistema operacional MacOSX e, mais recentemente, também para iOS (iPhone e iPad) com o nome de RubyMotion, ambos da Apple.
+
+\item HotRuby e JsRuby são implementações Ruby que rodam sobre interpretadores ou máquinas virtuais JavaScript, como por exemplo V8, da Google, ou Rhino, que foi desenvolvido para executar sobre a JVM.
+
+\item mruby é uma implementação mínima da linguagem, feita pelo próprio Matz, que tem por objetivo executar scripts Ruby em dispositivos móveis
+
+\end{itemize}
+
+\section{Instalando}
 Daqui para frente vou mostrar uma série de trechos de código Ruby para ilustrar melhor o que estou explicando. Caso você ainda não tenha o Ruby instalado em sua máquina, recomendo que você instale e execute os comandos dentro da ferramenta IRB.
-Linux e MacOS X
-Você pode instalar o Ruby através de uma ferramenta chamada RVM. O passo a passo está nesse site: https://rvm.io/rvm/install/
+
+\subsection{Linux e MacOS X}
+Você pode instalar o Ruby através de uma ferramenta chamada RVM. O passo a passo está nesse site: \url{https://rvm.io/rvm/install/}
+
 Existem pacotes prontos para a instalação do Ruby nas principais distribuições Linux, mas estes costumam estar desatualizados. O RVM permite que você tenha sempre a versão mais recente sendo executada na sua máquina.
-Windows
-No site http://www.rubyinstaller.org/ existem instaladores para a versão do Windows que você estiver usando no momento, seja 32 ou 64 bits. Caso seja questionado, instale a versão 1.9.3 do Ruby. A versão 1.8.7 não é compatível com boa parte das bibliotecas que são escritas atualmente.
-Um breve guia para quem está chegando agora ao Ruby
-Ruby se parece com o que?
+
+\subsection{Windows}
+No site \url{http://www.rubyinstaller.org/} existem instaladores para a versão do Windows que você estiver usando no momento, seja 32 ou 64 bits. Caso seja questionado, instale a versão 1.9.3 do Ruby. A versão 1.8.7 não é compatível com boa parte das bibliotecas que são escritas atualmente.
+
+\section{Um breve guia para quem está chegando agora ao Ruby}
+
+\subsection{Ruby se parece com o quê?}
+
 Ruby é, basicamente, uma mistura de Smalltalk, Python e Perl, o que não é motivo de preocupação para quem está chegando do Java, C\#, PHP ou qualquer outra linguagem que tenha algum suporte a orientação a objetos.
+
 Ruby é uma linguagem dinâmica, orientada a objetos e com algum suporte a programação funcional.
-Sintaxe e tipos de dados
-O IRB
+
+\subsection{Sintaxe e tipos de dados}
+\subsubsection{O IRB}
 IRB é a ferramenta do Ruby que vai nos acompanhar nessa primeira parte do curso.
+
 Basicamente, o IRB permite que você digite comandos Ruby num prompt e receba o resultado imediatamente, tornando muito mais ágil o aprendizado e a experimentação dos comandos que vamos ver.
+
 Recomendo fortemente que você teste as instruções no IRB assim que forem sendo ensinadas, para que você fixe o conteúdo. Repetição é comprovadamente uma forma eficaz de aprendizado.
+
 Para usá-lo, uma vez que você tenha instalado corretamente o Ruby, abra o terminal, digite irb e pressione ENTER. O comando irb deve ser escrito em letras minúsculas.
-Para sair do irb, use a combinação CONTROL+D.
-Nos exemplos a seguir, uma linha que começa com => indica a saída ou o resultado do comando, e não deve ser digitada.
+
+Para sair do irb, use a combinação \emph{CONTROL+D} ou digite \emph{exit}.
+
+Nos exemplos a seguir, uma linha que começa com =\textgreater indica a saída ou o resultado do comando, e não deve ser digitada.
+
 Exemplos:
+
+\begin{lstlisting}
 1 + 1
 => 2
 
@@ -179,13 +214,16 @@ radius = 5
 
 2 * PI * radius
 => 31.4159
-
+\end{lstlisting}
  
-Padrões de nomenclatura
+\subsubsection{Padrões de nomenclatura}
 Assim como a maioria das linguagens, Ruby tem uma padronização clara e simples sobre como nomear variáveis, classes e arquivos. Seguindo essas regras, seu codigo se tornará naturalmente mais claro aos olhos de outros desenvolvedores, e você conseguirá compreender também os códigos escritos por terceiros.
-Nomes de arquivos
+
+\paragraph{Nomes de arquivos}
 Os arquivos geralmente são nomeados com letras minúsculas e um caracter de sublinhado para separar palavras ou termos.
+
 Exemplos:
+
 title\_spec.rb
 
 products.rb
@@ -207,16 +245,20 @@ Constantes
 Constantes são valores que não devem e não podem ser alterados durante a execução da aplicação. São geralmente utilizados para tornar o código mais legível e evitar o uso de 'números mágicos', que são valores em um comando que não tem signficado algum para outros desenvolvedores.
 Constantes são sempre escritos em letras maiúsculas, com sublinhado como separador de termos.
 Exemplos:
+\begin{lstlisting}
 circumference = 2 * PI * radius
+\end{lstlisting}
 
 puts APPLICATION\_NAME
 
 Variáveis
 Variáveis são nomeadas utilizando-se apenas letras minúsculas e, quando necessário, sublinhado para separar os termos.
 Exemplos:
-circle\_circumference = 2 * PI * radius
+\begin{lstlisting}
+circle_circumference = 2 * PI * radius
 
-name = first\_name + " " + last\_name
+name = first_name + " " + last_name
+\end{lstlisting}
 
 Métodos e Funções
 Métodos e funções são nomeados utilizando a mesma regra das variáveis: apenas letras minúsculas e, quando necessário, sublinhado para separar os termos.
@@ -226,13 +268,17 @@ products.find :all
 
 Comentários
 Comentários são textos de caráter meramente informativo, que servem como lembrete ou documentação para o desenvolvedor. Normalmente são ignorados pelo compilador ou interpretador.
+
 Exemplos:
+
+\begin{lstlisting}
 \# este é um comentário de uma linha
 \# outra linha de comentário
 =begin
 Aqui temos um bloco de comentários, que pode ter quantas linhas forem necessárias
 Você pode escrever aqui seu nome, a data, o que você quiser, terminando o bloco com a linha abaixo
 =end
+\end{lstlisting}
 
 Atribuição e comparação
 Como acontece em várias outras linguagens, Ruby tem símbolos diferentes para atribuição e para comparação.
